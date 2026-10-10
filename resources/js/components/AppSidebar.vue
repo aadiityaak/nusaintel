@@ -15,7 +15,10 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { usePage } from '@inertiajs/vue3';
 import type { NavItem } from '@/types';
+
+const page = usePage<{ auth: { can_manage_incidents: boolean } }>();
 
 const mainNavItems: NavItem[] = [
     {
@@ -24,6 +27,13 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
 ];
+if (page.props.auth.can_manage_incidents) {
+    mainNavItems.push({
+        title: 'Incidents',
+        href: '/admin/incidents',
+        icon: LayoutGrid,
+    });
+}
 
 const footerNavItems: NavItem[] = [
     {

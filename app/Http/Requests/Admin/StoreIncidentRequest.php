@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class StoreIncidentRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return $this->user()?->can('manage-incidents') ?? false;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:255'],
+            'summary' => ['required', 'string', 'max:5000'],
+            'category' => ['required', 'string', 'max:100'],
+            'occurred_at' => ['nullable', 'date_format:Y-m-d'],
+            'occurred_at_precision' => ['nullable', Rule::in(['exact', 'approximate', 'unknown'])],
+            'published_at' => ['nullable', 'date_format:Y-m-d'],
+            'kecamatan' => ['required', 'string', 'max:150'],
+            'reason' => ['required', 'string', 'max:2000'],
+        ];
+    }
+}
