@@ -24,7 +24,7 @@ class PublicTimelineController extends Controller
         $query = Incident::query()
             ->where('status', 'published')
             ->with('sources:id,url,publisher,title,published_at,excerpt')
-            ->select(['id', 'public_id', 'title', 'summary', 'category', 'occurred_at', 'occurred_at_precision', 'published_at', 'kecamatan'])
+            ->select(['id', 'public_id', 'title', 'summary', 'category', 'occurred_at', 'occurred_at_precision', 'published_at', 'kecamatan', 'latitude', 'longitude'])
             ->when(isset($filters['category']), fn ($query) => $query->where('category', $filters['category']))
             ->when(isset($filters['kecamatan']), fn ($query) => $query->where('kecamatan', $filters['kecamatan']))
             ->when(isset($filters['from']), fn ($query) => $query->whereRaw('COALESCE(occurred_at, published_at) >= ?', [$filters['from']]))
@@ -67,7 +67,8 @@ class PublicTimelineController extends Controller
             'published_at' => $incident->published_at?->toDateString(),
             'effective_date' => $incident->occurred_at?->toDateString() ?? $incident->published_at?->toDateString(),
             'date_label' => $incident->occurred_at === null ? 'Tanggal artikel; tanggal kejadian tidak diketahui' : 'Tanggal kejadian',
-            'kecamatan' => $incident->kecamatan,
+            'latitude' => $incident->latitude !== null ? (float) $incident->latitude : null,
+            'longitude' => $incident->longitude !== null ? (float) $incident->longitude : null,
             'sources' => $incident->sources->map(fn ($source) => [
                 'url' => $source->url,
                 'publisher' => $source->publisher,

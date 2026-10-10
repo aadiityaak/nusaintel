@@ -52,104 +52,20 @@ function transition(status: string) {
 </script>
 
 <template>
-    <main class="mx-auto max-w-3xl space-y-5 p-6">
-        <h1 class="text-2xl font-semibold">
-            {{ incident ? 'Edit incident' : 'Create incident draft' }}
-        </h1>
-        <form class="space-y-4" @submit.prevent="save">
-            <label class="block"
-                >Title<input
-                    v-model="form.title"
-                    required
-                    maxlength="255"
-                    class="mt-1 block w-full rounded border p-3"
-            /></label>
-            <label class="block"
-                >Summary<textarea
-                    v-model="form.summary"
-                    required
-                    maxlength="5000"
-                    class="mt-1 block w-full rounded border p-3"
-                />
-            </label>
-            <label class="block"
-                >Category<input
-                    v-model="form.category"
-                    required
-                    maxlength="100"
-                    class="mt-1 block w-full rounded border p-3"
-            /></label>
-            <label class="block"
-                >Kecamatan<input
-                    v-model="form.kecamatan"
-                    required
-                    maxlength="150"
-                    class="mt-1 block w-full rounded border p-3"
-            /></label>
-            <label class="block"
-                >Incident date<input
-                    v-model="form.occurred_at"
-                    type="date"
-                    class="mt-1 block w-full rounded border p-3"
-            /></label>
-            <label class="block"
-                >Date precision<select
-                    v-model="form.occurred_at_precision"
-                    class="mt-1 block w-full rounded border p-3"
-                >
-                    <option value="">Unknown</option>
-                    <option value="exact">Exact</option>
-                    <option value="approximate">Approximate</option>
-                    <option value="unknown">Unknown</option>
-                </select></label
-            >
-            <label class="block"
-                >Article publication date<input
-                    v-model="form.published_at"
-                    type="date"
-                    class="mt-1 block w-full rounded border p-3"
-            /></label>
-            <label class="block"
-                >Reason for change<textarea
-                    v-model="form.reason"
-                    required
-                    maxlength="2000"
-                    class="mt-1 block w-full rounded border p-3"
-                />
-            </label>
-            <button
-                class="rounded border px-5 py-3"
-                :disabled="form.processing"
-            >
-                Save
-            </button>
-        </form>
-        <div v-if="incident" class="flex flex-wrap gap-3 border-t pt-5">
-            <button
-                v-if="incident.status !== 'published'"
-                type="button"
-                class="rounded border px-5 py-3"
-                @click="transition('published')"
-            >
-                Publish
-            </button>
-            <button
-                v-if="incident.status === 'published'"
-                type="button"
-                class="rounded border px-5 py-3"
-                @click="transition('draft')"
-            >
-                Unpublish
-            </button>
-            <button
-                v-if="incident.status !== 'rejected'"
-                type="button"
-                class="rounded border px-5 py-3"
-                @click="transition('rejected')"
-            >
-                Reject
-            </button>
+    <main class="min-h-screen bg-background text-foreground">
+        <div class="mx-auto max-w-3xl space-y-8 p-6 lg:p-10">
+            <header class="border-b border-border pb-7"><p class="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">Ruang kerja analis</p><h1 class="text-3xl font-semibold tracking-tight">{{ incident ? 'Edit kejadian' : 'Buat draf kejadian' }}</h1><p class="mt-2 text-muted-foreground">Pisahkan fakta laporan sumber dari interpretasi. Simpan alasan setiap perubahan.</p></header>
+            <form class="space-y-5 rounded-xl border border-border bg-card p-5 shadow-sm sm:p-6" @submit.prevent="save">
+                <label class="block text-sm font-medium">Judul<input v-model="form.title" required maxlength="255" class="mt-1.5 block min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" /></label>
+                <label class="block text-sm font-medium">Ringkasan<textarea v-model="form.summary" required maxlength="5000" rows="5" class="mt-1.5 block w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" /></label>
+                <div class="grid gap-5 sm:grid-cols-2"><label class="block text-sm font-medium">Kategori<input v-model="form.category" required maxlength="100" class="mt-1.5 block min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" /></label><label class="block text-sm font-medium">Kecamatan<input v-model="form.kecamatan" required maxlength="150" class="mt-1.5 block min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" /></label></div>
+                <div class="grid gap-5 sm:grid-cols-2"><label class="block text-sm font-medium">Tanggal kejadian<input v-model="form.occurred_at" type="date" class="mt-1.5 block min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" /></label><label class="block text-sm font-medium">Presisi waktu<select v-model="form.occurred_at_precision" class="mt-1.5 block min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"><option value="">Tidak diketahui</option><option value="exact">Tepat</option><option value="approximate">Perkiraan</option><option value="unknown">Tidak diketahui</option></select></label></div>
+                <label class="block text-sm font-medium">Tanggal publikasi artikel<input v-model="form.published_at" type="date" class="mt-1.5 block min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" /></label>
+                <label class="block text-sm font-medium">Alasan perubahan<textarea v-model="form.reason" required maxlength="2000" rows="4" class="mt-1.5 block w-full rounded-md border border-input bg-background px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" /></label>
+                <p v-if="form.errors.reason" role="alert" class="text-sm text-destructive">{{ form.errors.reason }}</p>
+                <button class="min-h-10 rounded-md bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" :disabled="form.processing">{{ form.processing ? 'Menyimpan…' : 'Simpan perubahan' }}</button>
+            </form>
+            <section v-if="incident" aria-labelledby="transition-heading" class="space-y-4 border-t border-border pt-7"><div><h2 id="transition-heading" class="text-lg font-semibold">Keputusan publikasi</h2><p class="mt-1 text-sm text-muted-foreground">Tindakan ini mengubah status yang terlihat di area publik.</p></div><div class="flex flex-wrap gap-3"><button v-if="incident.status !== 'published'" type="button" class="min-h-10 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" @click="transition('published')">Setujui dan publikasikan</button><button v-if="incident.status === 'published'" type="button" class="min-h-10 rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" @click="transition('draft')">Kembalikan ke draf</button><button v-if="incident.status !== 'rejected'" type="button" class="min-h-10 rounded-md border border-destructive/40 px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" @click="transition('rejected')">Tolak</button></div></section>
         </div>
-        <p v-if="form.errors.reason" role="alert">{{ form.errors.reason }}</p>
     </main>
 </template>

@@ -16,6 +16,6 @@ return [
         'queries' => array_values(array_filter(array_map('trim', explode('|', (string) env('CRIME_TIMELINE_SEARCH_QUERIES', ''))))),
     ],
     'fetch' => ['max_bytes' => 1048576, 'timeout' => 15, 'max_redirects' => 3],
-    'categories' => [],
-    'kecamatan' => [],
+    'categories' => ['kekerasan_seksual', 'gangguan_kamtibmas', 'pencurian', 'kecelakaan', 'penipuan'],
+    'kecamatan' => ['Karangnongko', 'Klaten Tengah', 'Klaten Utara', 'Klaten Selatan', 'Wedi', 'Cawas', 'Prambanan', 'Jogonalan', 'Jatinom'],
 ];
